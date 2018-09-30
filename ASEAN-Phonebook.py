@@ -83,16 +83,8 @@ class ASEANPhoneBook(object):
     def searchByStudentNumber(self,student_number):
         for index in range(len(self.entries)):
             if self.entries[index].getStudentNumber() == student_number: 
-                return self.entries[index]
+                return index
         return -1
-
-    def searchByCountryCode(self, filters):
-        temp = []
-        for entry_count in range(len(filters)):
-            for index in range(len(self.entries)):
-                if self.entries[index].getCountryCode() == filters[entry_count]:
-                    temp.append(self.entries[index])
-        return temp
     
     def editStudentEntry(self,student_number,attribute,new_data):
         for index in range(len(self.entries)):
@@ -119,12 +111,11 @@ class ASEANPhoneBook(object):
         return self.entries
 
     def setFilteredData(self,new_entry):
-        self.filtered_data = new_entry
+        self.filtered_data.append(new_entry)
     
     def getFilteredData(self):
         return self.filtered_data
 
-asean_phonebook = []
 phonebook = ASEANPhoneBook([],[])
 country_book = []
 data_prompts = []
@@ -138,10 +129,8 @@ while i < 5:
     i+=1
 
 read_phonebook = True
-
 while read_phonebook == True:
-
-    
+   
     print("[1] Store to ASEAN phonebook","[2] Edit entry in ASEAN phonebook","[3] Search ASEAN phonebook by country", "[4] Exit", sep="\n" )
     option = int(input())
 
@@ -155,11 +144,9 @@ while read_phonebook == True:
         create_new_entry = True
         while data_index < len(data_prompts) and create_new_entry == True:
             print(data_prompts[data_index])
-            new_student_data.append(input()) # error trapping for int inputs
+            new_student_data.append(input())
 
             if data_index == len(data_prompts)-1:
-                
-                asean_phonebook.append(Person(new_student_data[0],new_student_data[2],new_student_data[1],new_student_data[3],new_student_data[4],new_student_data[5],new_student_data[6],new_student_data[7]))
                 phonebook.addStudentEntry(Person(new_student_data[0],new_student_data[2],new_student_data[1],new_student_data[3],new_student_data[4],new_student_data[5],new_student_data[6],new_student_data[7]))
                 
                 if new_student_data[data_index] == 'Y':
@@ -173,8 +160,7 @@ while read_phonebook == True:
             else:
                 data_index += 1
 
-        for i in range(len(asean_phonebook)):
-            print(asean_phonebook[i])
+        for i in range(len(phonebook.getEntries())):
             print(phonebook.getEntries()[i])
         
         read_phonebook = True
@@ -193,16 +179,10 @@ while read_phonebook == True:
             print("Enter student number:")
             search_param = input()
 
-            for a in range(len(asean_phonebook)):
-                print(asean_phonebook[a])
+            for a in range(len(phonebook.getEntries())):
+                print(phonebook.getEntries()[a])
 
-            while search_index in range(len(asean_phonebook)):
-                print(asean_phonebook[search_index].getStudentNumber())
-                #if asean_phonebook[search_index].getStudentNumber() == search_param:
-                #    entry_index = search_index
-                #    searching = False
-                #    hit = True
-                #    break
+            while search_index in range(len(phonebook.getEntries())):
                 if phonebook.searchByStudentNumber(search_param) != -1:
                     entry_index = search_index
                     searching = False
@@ -215,12 +195,9 @@ while read_phonebook == True:
             if hit == True:
                 while editing == True:
 
-                    print(asean_phonebook[entry_index])
-                    print(phonebook.searchByStudentNumber(search_param))
+                    entry_index = phonebook.searchByStudentNumber(search_param)
+                    print(phonebook.getEntries()[entry_index])
 
-                    print("Here is the existing information about ",asean_phonebook[entry_index].getStudentNumber(),":")
-                    print(asean_phonebook[entry_index].getFirstName(), asean_phonebook[entry_index].getLastName(), "is a ",asean_phonebook[entry_index].getOccupation(),". Phone number is ", asean_phonebook[entry_index].getCountryCode(),"-",asean_phonebook[entry_index].getAreaCode(),"-",asean_phonebook[entry_index].getPhonNumber())
-                    
                     print("Here is the existing information about ",phonebook.getEntries()[entry_index].getStudentNumber(),":")
                     print(phonebook.getEntries()[entry_index].getFirstName(), phonebook.getEntries()[entry_index].getLastName(), "is a ",phonebook.getEntries()[entry_index].getOccupation(),". Phone number is ", phonebook.getEntries()[entry_index].getCountryCode(),"-",phonebook.getEntries()[entry_index].getAreaCode(),"-",phonebook.getEntries()[entry_index].getPhonNumber())
 
@@ -233,22 +210,6 @@ while read_phonebook == True:
                         searching = False
                     else:
                         print(data_prompts[edit_entry-1])
-                        
-                        if edit_entry == 1:
-                            asean_phonebook[entry_index].updateStudentNumber(input())
-                        elif edit_entry == 2:
-                            asean_phonebook[entry_index].updateLastName(input())
-                        elif edit_entry == 3:
-                            asean_phonebook[entry_index].updateGender(input())
-                        elif edit_entry == 4:
-                            asean_phonebook[entry_index].updateOccupation(input())
-                        elif edit_entry == 5:
-                            asean_phonebook[entry_index].updateCountryCode(input())
-                        elif edit_entry == 6:
-                            asean_phonebook[entry_index].updateAreaCode(input())
-                        elif edit_entry == 7:
-                            asean_phonebook[entry_index].updatePhonNumber(input())
-                        
                         phonebook.editStudentEntry(search_param,edit_entry,input())
                         editing = True
             else:
@@ -256,14 +217,12 @@ while read_phonebook == True:
                 searching = True
                 print("Student number does not exist in phonebook.")
             
-        for b in range(len(asean_phonebook)):
-            print(asean_phonebook[b])
+        for b in range(len(phonebook.getEntries())):
             print(phonebook.getEntries()[b])
         
         read_phonebook = True
     elif option == 3:
-        for b in range(len(asean_phonebook)):
-            print(asean_phonebook[b])
+        for b in range(len(phonebook.getEntries())):
             print(phonebook.getEntries()[b])
 
         filters = []
@@ -298,45 +257,47 @@ while read_phonebook == True:
         filtering = True
         
         phonebook_index = 0
-        while phonebook_index in range(len(asean_phonebook)):
+        while phonebook_index in range(len(phonebook.getEntries())):
             filters_index = 0
             while filters_index in range(len(filters)):
-                if int(asean_phonebook[phonebook_index].getCountryCode()) == int(filters[filters_index]):
-                    filtered_data.append(asean_phonebook[phonebook_index])
+                if int(phonebook.getEntries()[phonebook_index].getCountryCode()) == int(filters[filters_index]):
+                    filtered_data.append(phonebook.getEntries()[phonebook_index])
                 filters_index+=1
             phonebook_index+=1
-
-        phonebook.setFilteredData(phonebook.searchByCountryCode(filters))
         
         g=0
-        for g in range(len(phonebook.getFilteredData())):
-            print(phonebook.getFilteredData()[g])
+        for g in range(len(filtered_data)):
+            print(filtered_data[g])
 
-        results_index = -1
-        results_header = ""
-        while results_index < 0:
-            results_header += country_book[0].getCountryName()
-            for index in range(1,len(filters)):
-                results_header += (" and " + country_book[index].getCountryName())
-            print("Here are the students from ",results_header,end=".\n")
-            results_index = 0
+        if len(filtered_data) != 0:
 
-        count,sort_count,tag = 0,0,-1
-        sort_data = []
+            results_index = -1
+            results_header = ""
+            while results_index < 0:
+                results_header += country_book[0].getCountryName()
+                for index in range(1,len(filters)):
+                    results_header += (" and " + country_book[index].getCountryName())
+                print("Here are the students from ",results_header,end=".\n")
+                results_index = 0
 
-        while count in range(len(filtered_data)):
-            sort_data.append(filtered_data[count].getLastName()+"."+filtered_data[count].getStudentNumber())
-            count+=1
-        
-        sort_data.sort()
-        print(sort_data)
+            count,sort_count,tag = 0,0,-1
+            sort_data = []
 
-        while sort_count in range(len(sort_data)):
-            student_number = sort_data[sort_count][sort_data[sort_count].index('.')+1:]
-            for h in range(len(filtered_data)):
-                if filtered_data[h].getStudentNumber() == student_number:
-                    print(filtered_data[h].getLastName(),", ",filtered_data[h].getFirstName(),"with student number",filtered_data[h].getStudentNumber()," is a",filtered_data[h].getOccupation(),". Phone number is ",filtered_data[h].getCountryCode(),"-",filtered_data[h].getAreaCode(),"-",filtered_data[h].getPhonNumber(),".")  
-            sort_count+=1
+            while count in range(len(filtered_data)):
+                sort_data.append(filtered_data[count].getLastName()+"."+filtered_data[count].getStudentNumber())
+                count+=1
+            
+            sort_data.sort()
+            print(sort_data)
+
+            while sort_count in range(len(sort_data)):
+                student_number = sort_data[sort_count][sort_data[sort_count].index('.')+1:]
+                for h in range(len(phonebook.getEntries())):
+                    if phonebook.getEntries()[h].getStudentNumber() == student_number:
+                        print(phonebook.getEntries()[h].getLastName(),", ",phonebook.getEntries()[h].getFirstName(),"with student number",phonebook.getEntries()[h].getStudentNumber()," is a",phonebook.getEntries()[h].getOccupation(),". Phone number is ",phonebook.getEntries()[h].getCountryCode(),"-",phonebook.getEntries()[h].getAreaCode(),"-",phonebook.getEntries()[h].getPhonNumber(),".")  
+                sort_count+=1
+        else:
+            print("There are no phonebook entries from those countries.")
 
         read_phonebook = True
         
