@@ -135,7 +135,6 @@ while read_phonebook == True:
     option = int(input())
 
     if option == 1:
-        print("option 1")
         data_prompts = ["Enter student number:", "Enter surname:", "Enter first name:", "Enter gender:", "Enter occupation:", "Enter country code:", "Enter area code:", "Enter phone number:", "Do you want to enter another entry [Y/N]?"]
 
         new_student_data = []
@@ -160,9 +159,6 @@ while read_phonebook == True:
             else:
                 data_index += 1
 
-        for i in range(len(phonebook.getEntries())):
-            print(phonebook.getEntries()[i])
-        
         read_phonebook = True
 
     elif option == 2:
@@ -179,9 +175,6 @@ while read_phonebook == True:
             print("Enter student number:")
             search_param = input()
 
-            for a in range(len(phonebook.getEntries())):
-                print(phonebook.getEntries()[a])
-
             while search_index in range(len(phonebook.getEntries())):
                 if phonebook.searchByStudentNumber(search_param) != -1:
                     entry_index = search_index
@@ -193,11 +186,9 @@ while read_phonebook == True:
                     search_index += 1
             
             if hit == True:
+                entry_index = phonebook.searchByStudentNumber(search_param)                
+
                 while editing == True:
-
-                    entry_index = phonebook.searchByStudentNumber(search_param)
-                    print(phonebook.getEntries()[entry_index])
-
                     print("Here is the existing information about ",phonebook.getEntries()[entry_index].getStudentNumber(),":")
                     print(phonebook.getEntries()[entry_index].getFirstName(), phonebook.getEntries()[entry_index].getLastName(), "is a ",phonebook.getEntries()[entry_index].getOccupation(),". Phone number is ", phonebook.getEntries()[entry_index].getCountryCode(),"-",phonebook.getEntries()[entry_index].getAreaCode(),"-",phonebook.getEntries()[entry_index].getPhonNumber())
 
@@ -211,20 +202,14 @@ while read_phonebook == True:
                     else:
                         print(data_prompts[edit_entry-1])
                         phonebook.editStudentEntry(search_param,edit_entry,input())
-                        editing = True
             else:
                 search_index = 0
                 searching = True
                 print("Student number does not exist in phonebook.")
             
-        for b in range(len(phonebook.getEntries())):
-            print(phonebook.getEntries()[b])
-        
         read_phonebook = True
+        
     elif option == 3:
-        for b in range(len(phonebook.getEntries())):
-            print(phonebook.getEntries()[b])
-
         filters = []
         searching_by_country = True
         
@@ -249,10 +234,10 @@ while read_phonebook == True:
             elif choice == 6:
                 filters = [int(country_book[0].getCountryCode()),int(country_book[1].getCountryCode()),int(country_book[2].getCountryCode()),int(country_book[3].getCountryCode()),int(country_book[4].getCountryCode())]
                 break
+            elif choice > 6 or choice < 0:
+                print("No data for selected option")
             i += 1
         
-        print(filters)
-
         filtered_data = []
         filtering = True
         
@@ -265,10 +250,6 @@ while read_phonebook == True:
                 filters_index+=1
             phonebook_index+=1
         
-        g=0
-        for g in range(len(filtered_data)):
-            print(filtered_data[g])
-
         if len(filtered_data) != 0:
 
             results_index = -1
@@ -288,8 +269,7 @@ while read_phonebook == True:
                 count+=1
             
             sort_data.sort()
-            print(sort_data)
-
+            
             while sort_count in range(len(sort_data)):
                 student_number = sort_data[sort_count][sort_data[sort_count].index('.')+1:]
                 for h in range(len(phonebook.getEntries())):
@@ -301,6 +281,5 @@ while read_phonebook == True:
 
         read_phonebook = True
         
-    else:
-        print(option)
+    elif option == 4:
         read_phonebook = False
