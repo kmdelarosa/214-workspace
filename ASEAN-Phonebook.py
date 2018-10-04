@@ -103,6 +103,12 @@ class ASEANPhoneBook(object):
                     self.getEntries()[index].updateAreaCode(new_data)
                 elif attribute == 7:
                     self.getEntries()[index].updatePhonNumber(new_data)
+    
+    def checkForDuplicateEntry(self,student_number):
+        for check_entries in range(len(self.getEntries())):
+            if self.getEntries()[check_entries].getStudentNumber() == student_number:
+                return True
+        return False
 
     def addStudentEntry(self,new_entry):
         self.entries.append(new_entry)
@@ -139,12 +145,31 @@ while read_phonebook == True:
 
         new_student_data = []
         data_index = 0
-        valid_country_check = True
 
         create_new_entry = True
         while data_index < len(data_prompts) and create_new_entry == True:
             print(data_prompts[data_index])
             new_student_data.append(input())
+
+            valid_country_check = False
+
+            if data_index == 0:
+                if phonebook.checkForDuplicateEntry(new_student_data[data_index]) == True:
+                    print("Already exists in phonebook!")
+                    del new_student_data[data_index]
+                    data_index -= 1
+
+            if data_index == 3:
+                if new_student_data[data_index] != 'M' and new_student_data[data_index] != 'F':
+                    print("Invalid Input!")
+                    del new_student_data[data_index]
+                    data_index -= 1
+
+            if data_index == 5:
+                if int(new_student_data[data_index]) != 60 and int(new_student_data[data_index]) != 62 and int(new_student_data[data_index]) != 63 and int(new_student_data[data_index]) != 65 and int(new_student_data[data_index]) != 66:
+                    print("Invalid Input!")
+                    del new_student_data[data_index]
+                    data_index -= 1
 
             if data_index == len(data_prompts)-1:
                 phonebook.addStudentEntry(Person(new_student_data[0],new_student_data[2],new_student_data[1],new_student_data[3],new_student_data[4],new_student_data[5],new_student_data[6],new_student_data[7]))
@@ -190,6 +215,8 @@ while read_phonebook == True:
                 entry_index = phonebook.searchByStudentNumber(search_param)                
 
                 while editing == True:
+                    duplicate = False
+
                     print("Here is the existing information about ",phonebook.getEntries()[entry_index].getStudentNumber(),":")
                     print(phonebook.getEntries()[entry_index].getFirstName(), phonebook.getEntries()[entry_index].getLastName(), "is a ",phonebook.getEntries()[entry_index].getOccupation(),". Phone number is ", phonebook.getEntries()[entry_index].getCountryCode(),"-",phonebook.getEntries()[entry_index].getAreaCode(),"-",phonebook.getEntries()[entry_index].getPhonNumber())
 
@@ -200,9 +227,18 @@ while read_phonebook == True:
                     if edit_entry == 8:
                         editing = False
                         searching = False
+
                     else:
                         print(data_prompts[edit_entry-1])
-                        phonebook.editStudentEntry(search_param,edit_entry,input())
+                        updated_entry = input()
+                        
+                        if edit_entry == 1:
+                            if phonebook.checkForDuplicateEntry(updated_entry) == True:
+                                print("Already exists in phonebook!")
+                                duplicate = True
+                        
+                        if duplicate != True:
+                            phonebook.editStudentEntry(search_param,edit_entry,updated_entry)
             else:
                 search_index = 0
                 searching = True
