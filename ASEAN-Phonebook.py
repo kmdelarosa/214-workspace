@@ -135,10 +135,11 @@ while read_phonebook == True:
     option = int(input())
 
     if option == 1:
-        data_prompts = ["Enter student number:", "Enter surname:", "Enter first name:", "Enter gender:", "Enter occupation:", "Enter country code:", "Enter area code:", "Enter phone number:", "Do you want to enter another entry [Y/N]?"]
+        data_prompts = ["Enter student number:", "Enter surname:", "Enter first name:", "Enter gender: (M for Male, F for Female)", "Enter occupation:", "Enter country code:", "Enter area code:", "Enter phone number:", "Do you want to enter another entry [Y/N]?"]
 
         new_student_data = []
         data_index = 0
+        valid_country_check = True
 
         create_new_entry = True
         while data_index < len(data_prompts) and create_new_entry == True:
