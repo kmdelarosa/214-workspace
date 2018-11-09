@@ -149,3 +149,44 @@ print(float(frac2.inverse()))
     # objects: Country, Person, Main Menu, Store Menu, Edit Menu, Search Menu
     # Country : country_name, country_code,
     #           getCountryName(), getCountryCode()
+
+    
+class Polygon:
+    def __init__(self, num_sides):
+        self.num_sides = num_sides
+        self.sides = [0 for i in range(num_sides)]
+    
+    def inputSides(self):
+        self.sides = [float(input("Enter side "+str(i+1)+" : ")) for i in range(self.num_sides)]
+
+    def showSides(self):
+        for i in range(self.num_sides):
+            print("Side: "+(i+1)+" is ",self.sides[i])
+
+class Triangle(Polygon):
+    def __init__(self):
+        Polygon.__init__(self,3)    
+    
+    def findArea(self):
+        a,b,c = self.sides
+
+        s = (a+b+c)/2
+        area = (s*(s-a)*(s-b)*(s-c))**0.5
+
+        print("The area of the triangle is %0.2f" %area)
+
+class Fan(object):
+    def __init__(self,is_used,brand):
+        self.is_used = is_used
+        self.brand = brand
+    
+    def use_the_fan(self,is_used):
+        self.is_used = True
+
+my_bool = False
+fan_ko = Fan(my_bool,"Nike")
+
+fan_ko.use_the_fan(my_bool)
+print(fan_ko.is_used)
+
+print(fan_ko.brand)
